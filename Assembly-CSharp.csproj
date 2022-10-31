@@ -56,8 +56,11 @@
     <Analyzer Include="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\Sokoban_stage.cs" />
     <Compile Include="Assets\Scripts\Stage_Auto_Create.cs" />
+    <Compile Include="Assets\Scripts\Sokoban_stage.cs" />
+    <Compile Include="Assets\Scripts\TextUI.cs" />
+    <Compile Include="Assets\Scripts\SceneChnge.cs" />
+    <Compile Include="Assets\Scripts\ChoseUI.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\kenney_sokobanPack\Spritesheet\sokoban_spritesheet.xml" />
