@@ -25,13 +25,15 @@ public class ChoseUI : MonoBehaviour
         {
             ExitUI.GetComponent<TextUI>().enabled = false; 
             StartUI.GetComponent<TextUI>().enabled = true;
-            ExitUI.GetComponent<Text>().color = Color.white ;
+            ExitUI.GetComponent<Text>().color = Color.white;
+            StartUI.GetComponent<Text>().color = Color.green;
         }
         if (Input.GetKey(KeyCode.DownArrow))
         {
             StartUI.GetComponent<TextUI>().enabled = false;
             ExitUI.GetComponent<TextUI>().enabled = true;
-            StartUI.GetComponent<Text>().color = Color.green;
+            StartUI.GetComponent<Text>().color = Color.white;
+            ExitUI.GetComponent<Text>().color = Color.green;
         }
     }
 }

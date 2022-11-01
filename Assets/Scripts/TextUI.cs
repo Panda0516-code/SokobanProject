@@ -26,7 +26,17 @@ public class TextUI : MonoBehaviour
     }
     public void ChangeScene()
     {
-        SceneManager.LoadSceneAsync(sceneName);
+        if (sceneName == "")
+        {
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;//ゲームプレイ終了
+#else
+    Application.Quit();//ゲームプレイ終了
+#endif
+        }
+        else { SceneManager.LoadSceneAsync(sceneName); }
+        
+        
     }
     Color Getalphacoler(Color color)
     {

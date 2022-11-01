@@ -10,6 +10,7 @@ public class Sokoban_stage : MonoBehaviour
     private int rows; // 行数
     private int columns; // 列数
     private TileType[,] tileList; // タイル情報を管理する二次元配列
+    public int player_move_cnt = default;//歩いた歩数をカウントする変数
     [SerializeField]
     private float tileSize; // タイルのサイズ
     [SerializeField]
@@ -22,6 +23,8 @@ public class Sokoban_stage : MonoBehaviour
     private Sprite blockSprite; // ブロックのスプライト
     [SerializeField]
     private Sprite wallsprite; // 壁のスプライト
+    [SerializeField]
+    private GameObject congra;//コングラチュレーションのスプライト
 
     private GameObject player; // プレイヤーのゲームオブジェクト
     private Vector2 middleOffset; // 中心位置
@@ -249,24 +252,28 @@ public class Sokoban_stage : MonoBehaviour
         {
             // プレイヤーが上に移動できるか検証
             TryMovePlayer(DirectionType.UP);
+            Debug.Log(player_move_cnt);
         }
         // 右矢印が押された場合
         else if (Input.GetKeyDown(KeyCode.RightArrow))
         {
             // プレイヤーが右に移動できるか検証
             TryMovePlayer(DirectionType.RIGHT);
+            Debug.Log(player_move_cnt);
         }
         // 下矢印が押された場合
         else if (Input.GetKeyDown(KeyCode.DownArrow))
         {
             // プレイヤーが下に移動できるか検証
             TryMovePlayer(DirectionType.DOWN);
+            Debug.Log(player_move_cnt);
         }
         // 左矢印が押された場合
         else if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
             // プレイヤーが左に移動できるか検証
             TryMovePlayer(DirectionType.LEFT);
+            Debug.Log(player_move_cnt);
         }
     }
     // 指定された方向にプレイヤーが移動できるか検証
@@ -292,6 +299,8 @@ public class Sokoban_stage : MonoBehaviour
             // ブロックの移動先にブロックが存在しない場合
             if (IsValidPosition(nextBlockPos) && !IsBlock(nextBlockPos))
             {
+                player_move_cnt++;//歩いた歩数をカウントする
+
                 // 移動するブロックを取得
                 GameObject block = GetGameObjectAtPosition(nextPlayerPos);
 
@@ -330,6 +339,7 @@ public class Sokoban_stage : MonoBehaviour
                 {
                     // 移動先が地面ならプレイヤーの番号に更新
                     tileList[nextPlayerPos.x, nextPlayerPos.y] = TileType.PLAYER;
+                    
                 }
                 else if (tileList[nextPlayerPos.x, nextPlayerPos.y] == TileType.TARGET)
                 {
@@ -355,11 +365,13 @@ public class Sokoban_stage : MonoBehaviour
             {
                 // 移動先が地面ならプレイヤーの番号に更新
                 tileList[nextPlayerPos.x, nextPlayerPos.y] = TileType.PLAYER;
+                player_move_cnt++;//歩いた歩数をカウントする
             }
             else if (tileList[nextPlayerPos.x, nextPlayerPos.y] == TileType.TARGET)
             {
                 // 移動先が目的地ならプレイヤー（目的地の上）の番号に更新
                 tileList[nextPlayerPos.x, nextPlayerPos.y] = TileType.PLAYER_ON_TARGET;
+                player_move_cnt++;//歩いた歩数をカウントする
             }
         }
 
@@ -432,6 +444,8 @@ public class Sokoban_stage : MonoBehaviour
         {
             // ゲームクリア
             _isClear = true;
+            congra.SetActive(true);
         }
     }
+
 }
