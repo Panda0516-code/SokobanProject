@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Sokoban_stage : MonoBehaviour
 {
@@ -10,7 +11,7 @@ public class Sokoban_stage : MonoBehaviour
     private int rows; // 行数
     private int columns; // 列数
     private TileType[,] tileList; // タイル情報を管理する二次元配列
-    public int player_move_cnt = default;//歩いた歩数をカウントする変数
+    private int player_move_cnt = default;//歩いた歩数をカウントする変数
     [SerializeField]
     private float tileSize; // タイルのサイズ
     [SerializeField]
@@ -25,6 +26,8 @@ public class Sokoban_stage : MonoBehaviour
     private Sprite wallsprite; // 壁のスプライト
     [SerializeField]
     private GameObject congra;//コングラチュレーションのスプライト
+    [SerializeField]
+    private Text score_text;//スコアのテキスト
 
     private GameObject player; // プレイヤーのゲームオブジェクト
     private Vector2 middleOffset; // 中心位置
@@ -243,6 +246,7 @@ public class Sokoban_stage : MonoBehaviour
     }// 毎フレーム呼び出される
     private void Update()
     {
+        score_text.text = "歩いた歩数:"　+ player_move_cnt.ToString();
 
         // ゲームクリアしている場合は操作できないようにする
         if (_isClear) return;
