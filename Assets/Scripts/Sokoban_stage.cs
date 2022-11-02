@@ -11,7 +11,21 @@ public class Sokoban_stage : MonoBehaviour
     private int rows; // 行数
     private int columns; // 列数
     private TileType[,] tileList; // タイル情報を管理する二次元配列
-    private int player_move_cnt = default;//歩いた歩数をカウントする変数
+    private int max_loop_count;//ループ回数の制限;
+    private int loop_count;//現在のループ回数
+    private int player_move_cnt;//歩いた歩数をカウントする変数
+                                // 移動方向格納用
+    int move_vec = -1;     // 移動方向
+    int pre_move_vec = -1; // 一つ前の移動方向
+                           // 位置格納用
+    int[] box_pos = { 0, 0 };      // ボックス位置
+    int[] walk_pos = { 0, 0 };     // 歩行ポイント位置
+    int[] pre_box_pos = { 0, 0 };  // 一つ前のボックス位置
+    int[] pre_walk_pos = { 0, 0 }; // 一つ前の歩行ポイント位置
+    int[] walk2_pos = { 0, 0 };    // 歩行ポイント位置２（経路用）
+    int[] walk3_pos = { 0, 0 };    // 歩行ポイント位置３（経路用）
+    int[] random_pos = { 0, 0 };
+    int[] random_last_pos = { 0, 0 };
     [SerializeField]
     private float tileSize; // タイルのサイズ
     [SerializeField]
@@ -23,7 +37,7 @@ public class Sokoban_stage : MonoBehaviour
     [SerializeField]
     private Sprite blockSprite; // ブロックのスプライト
     [SerializeField]
-    private Sprite wallsprite; // 壁のスプライト
+    private Sprite wallSprite; // 壁のスプライト
     [SerializeField]
     private GameObject congra;//コングラチュレーションのスプライト
     [SerializeField]
@@ -40,7 +54,17 @@ public class Sokoban_stage : MonoBehaviour
     private void Start()
     {
         LoadTileData(); // タイルの情報を読み込む
+        Randamstage();
+        Setmaptile();
         CreateStage(); // ステージを作成
+    }
+    private enum StageMoveType
+    {
+        LEFT_MOVE,
+        RIGHT_MOVE,
+        UP_MOVE,
+        DOWN_MOVE
+
     }
     private enum DirectionType
     {
@@ -78,6 +102,8 @@ public class Sokoban_stage : MonoBehaviour
         rows = lines.Length; // 行数
         columns = nums.Length; // 列数
 
+        max_loop_count = (rows-2) * (columns-2);//外周以外のタイルの数をカウント
+        
         // タイル情報を int 型の２次元配列で保持
         tileList = new TileType[columns, rows];
         for (int y = 0; y < rows; y++)
@@ -91,6 +117,94 @@ public class Sokoban_stage : MonoBehaviour
                 tileList[x, y] = (TileType)int.Parse(nums[x]);
             }
         }
+    }
+    //ランダムなステージを作成
+    private void Randamstage()
+    {
+
+        int[] random_pos = { 0, 0 };
+        int[] random_last_pos = { 0, 0 };
+        random_pos[0] = Random.Range(1,rows-1);
+        random_pos[1] = Random.Range(1,columns-1);
+    }
+    private void Setmaptile()
+    {
+        // 移動方向格納用
+        int move_vec = -1;     // 移動方向
+        int pre_move_vec = -1; // 一つ前の移動方向
+                               // 位置格納用
+        int[] box_pos = { 0, 0 };      // ボックス位置
+        int[] walk_pos = { 0, 0 };     // 歩行ポイント位置
+        int[] pre_box_pos = { 0, 0 };  // 一つ前のボックス位置
+        int[] pre_walk_pos = { 0, 0 }; // 一つ前の歩行ポイント位置
+        int[] walk2_pos = { 0, 0 };    // 歩行ポイント位置２（経路用）
+        int[] walk3_pos = { 0, 0 };    // 歩行ポイント位置３（経路用）
+        /* ポイント位置を基準にマップの自動生成を行う*/
+        // ポイント位置を基準とする
+        pre_box_pos[0] = random_pos[0];
+        pre_box_pos[1] = random_pos[1];
+        // ループ回数初期化
+        loop_count = 0;
+        // ボックスと歩行ポイントをポイントの直線上に並べて置く
+        while (true)
+        {
+            // ４方向をランダムで決める
+            move_vec = Random.Range(0, 3);
+            if (move_vec == ((int)StageMoveType.LEFT_MOVE))
+            {
+                box_pos[0] = pre_box_pos[0] - 1;
+                box_pos[1] = pre_box_pos[1];
+                walk_pos[0] = pre_box_pos[0] - 2;
+                walk_pos[1] = pre_box_pos[1];
+            }
+            else if (move_vec == ((int)StageMoveType.RIGHT_MOVE))
+            {
+                box_pos[0] = pre_box_pos[0] + 1;
+                box_pos[1] = pre_box_pos[1];
+                walk_pos[0] = pre_box_pos[0] + 2;
+                walk_pos[1] = pre_box_pos[1];
+            }
+            else if (move_vec == ((int)StageMoveType.UP_MOVE))
+            {
+                box_pos[0] = pre_box_pos[0];
+                box_pos[1] = pre_box_pos[1] - 1;
+                walk_pos[0] = pre_box_pos[0];
+                walk_pos[1] = pre_box_pos[1] - 2;
+            }
+            else if (move_vec == ((int)StageMoveType.DOWN_MOVE))
+            {
+                box_pos[0] = pre_box_pos[0];
+                box_pos[1] = pre_box_pos[1] + 1;
+                walk_pos[0] = pre_box_pos[0];
+                walk_pos[1] = pre_box_pos[1] + 2;
+            }
+            // 歩行ポイント（２マス先）が置ける範囲なら置く
+            // マップの範囲 かつ ブランクか歩行経路のタイル
+            if (0 < walk_pos[0] && walk_pos[0] < rows - 1 && 0 < walk_pos[1] && walk_pos[1] < columns - 1
+            && (tileList[walk_pos[1], walk_pos[0]] == TileType.NONE || tileList[walk_pos[1],walk_pos[0]]== TileType.GROUND)
+            && tileList[box_pos[1],box_pos[0]] == TileType.NONE || tileList[box_pos[1],box_pos[0]] == TileType.GROUND)
+            {
+                // 移動した方向を保持
+                pre_move_vec = move_vec;
+                break;
+            }// ループ回数が最大数を超えたら処理終了
+            loop_count++;
+            if (loop_count >= max_loop_count)
+            {
+                // 最終的な位置はポイント位置として返却
+                random_last_pos[0] = random_pos[0];
+                random_last_pos[1] = random_pos[1];
+                return;
+            }
+
+        }
+        // ボックス、歩行ポイントを設定
+        tileList[box_pos[1],box_pos[0]] = TileType.BLOCK;
+        tileList[pre_box_pos[1],pre_box_pos[0]] = TileType.GROUND;
+        tileList[walk_pos[1],walk_pos[0]] = TileType.GROUND;
+        // 最後の歩行ポイントを設定
+        random_last_pos[0] = walk_pos[0];
+        random_last_pos[1] = walk_pos[1];
     }
     // ステージを作成
     private void CreateStage()
@@ -131,7 +245,7 @@ public class Sokoban_stage : MonoBehaviour
                     spriteRenderer = wall.AddComponent<SpriteRenderer>();
 
                     // 壁のスプライトを設定
-                    spriteRenderer.sprite = wallsprite;
+                    spriteRenderer.sprite = wallSprite;
 
                     // 壁の描画順を手前にする
                     spriteRenderer.sortingOrder = 1;
