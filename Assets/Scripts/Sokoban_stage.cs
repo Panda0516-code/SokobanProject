@@ -54,9 +54,13 @@ public class Sokoban_stage : MonoBehaviour
     private void Start()
     {
         LoadTileData(); // タイルの情報を読み込む
+        Debug.Log("aaa");
         Randamstage();
+        Debug.Log("bbb");
         Setmaptile();
+        Debug.Log("ccc");
         CreateStage(); // ステージを作成
+        Debug.Log("ddd");
     }
     private enum StageMoveType
     {
@@ -134,7 +138,7 @@ public class Sokoban_stage : MonoBehaviour
         int pre_move_vec = -1; // 一つ前の移動方向
                                // 位置格納用
         int[] box_pos = { 0, 0 };      // ボックス位置
-        int[] walk_pos = { 0, 0 };     // 歩行ポイント位置
+        int[] walk_pos = new int[2];    // 歩行ポイント位置
         int[] pre_box_pos = { 0, 0 };  // 一つ前のボックス位置
         int[] pre_walk_pos = { 0, 0 }; // 一つ前の歩行ポイント位置
         int[] walk2_pos = { 0, 0 };    // 歩行ポイント位置２（経路用）
@@ -180,7 +184,7 @@ public class Sokoban_stage : MonoBehaviour
             }
             // 歩行ポイント（２マス先）が置ける範囲なら置く
             // マップの範囲 かつ ブランクか歩行経路のタイル
-            if (0 < walk_pos[0] && walk_pos[0] < rows - 1 && 0 < walk_pos[1] && walk_pos[1] < columns - 1
+            if (0 < walk_pos[0] && walk_pos[0] < rows && 0 < walk_pos[1] && walk_pos[1] < columns 
             && (tileList[walk_pos[1], walk_pos[0]] == TileType.NONE || tileList[walk_pos[1],walk_pos[0]]== TileType.GROUND)
             && tileList[box_pos[1],box_pos[0]] == TileType.NONE || tileList[box_pos[1],box_pos[0]] == TileType.GROUND)
             {
