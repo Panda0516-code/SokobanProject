@@ -903,7 +903,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d8f2b6c37e77bf44b6a3745928cf0e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stageFile: {fileID: 4900000, guid: b46ffec8cbf20204ab03d18bddd4c9a6, type: 3}
+  stageFile: {fileID: 4900000, guid: ad1ecc620f4bef4459ccdb5ce07cd47e, type: 3}
   tileSize: 0.64
   groundSprite: {fileID: 21300000, guid: ab8573e9bc4563e49ab6a45550bf00da, type: 3}
   targetSprite: {fileID: 21300000, guid: b7ad6b33b383cfb459dcc2d93d033ba9, type: 3}

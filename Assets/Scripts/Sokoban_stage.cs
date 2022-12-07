@@ -14,7 +14,6 @@ public class Sokoban_stage : MonoBehaviour
     private int max_loop_count;//ループ回数の制限;
     private int loop_count;//現在のループ回数
     private int player_move_cnt;//歩いた歩数をカウントする変数
-                                // 移動方向格納用
     int move_vec = -1;     // 移動方向
     int pre_move_vec = -1; // 一つ前の移動方向
                            // 位置格納用
@@ -54,13 +53,10 @@ public class Sokoban_stage : MonoBehaviour
     private void Start()
     {
         LoadTileData(); // タイルの情報を読み込む
-        Debug.Log("aaa");
-        Randamstage();
-        Debug.Log("bbb");
-        Setmaptile();
-        Debug.Log("ccc");
+        //Randamstage();
+        //Setmaptile();
         CreateStage(); // ステージを作成
-        Debug.Log("ddd");
+        Debug.Log(loop_count);
     }
     private enum StageMoveType
     {
@@ -130,6 +126,8 @@ public class Sokoban_stage : MonoBehaviour
         int[] random_last_pos = { 0, 0 };
         random_pos[0] = Random.Range(1,rows-1);
         random_pos[1] = Random.Range(1,columns-1);
+        Debug.Log(random_pos[0]);
+        Debug.Log(random_pos[1]);
     }
     private void Setmaptile()
     {
@@ -184,31 +182,34 @@ public class Sokoban_stage : MonoBehaviour
             }
             // 歩行ポイント（２マス先）が置ける範囲なら置く
             // マップの範囲 かつ ブランクか歩行経路のタイル
-            if (0 < walk_pos[0] && walk_pos[0] < rows && 0 < walk_pos[1] && walk_pos[1] < columns 
-            && (tileList[walk_pos[1], walk_pos[0]] == TileType.NONE || tileList[walk_pos[1],walk_pos[0]]== TileType.GROUND)
-            && tileList[box_pos[1],box_pos[0]] == TileType.NONE || tileList[box_pos[1],box_pos[0]] == TileType.GROUND)
-            {
-                // 移動した方向を保持
-                pre_move_vec = move_vec;
-                break;
-            }// ループ回数が最大数を超えたら処理終了
+            //if (0 < walk_pos[0] && walk_pos[0] < rows && 0 < walk_pos[1] && walk_pos[1] < columns 
+            //&& (tileList[walk_pos[1], walk_pos[0]] == TileType.NONE || tileList[walk_pos[1],walk_pos[0]]== TileType.GROUND)
+            //&& tileList[box_pos[1],box_pos[0]] == TileType.NONE || tileList[box_pos[1],box_pos[0]] == TileType.GROUND)
+            //{
+            // 移動した方向を保持
+
+            Debug.Log(loop_count);
+
+            //}// ループ回数が最大数を超えたら処理終了
             loop_count++;
+
             if (loop_count >= max_loop_count)
             {
                 // 最終的な位置はポイント位置として返却
                 random_last_pos[0] = random_pos[0];
                 random_last_pos[1] = random_pos[1];
-                return;
+                break;
             }
 
         }
         // ボックス、歩行ポイントを設定
         tileList[box_pos[1],box_pos[0]] = TileType.BLOCK;
-        tileList[pre_box_pos[1],pre_box_pos[0]] = TileType.GROUND;
+        tileList[pre_box_pos[1],pre_box_pos[0]] = TileType.BLOCK_ON_TARGET;
         tileList[walk_pos[1],walk_pos[0]] = TileType.GROUND;
         // 最後の歩行ポイントを設定
         random_last_pos[0] = walk_pos[0];
         random_last_pos[1] = walk_pos[1];
+
     }
     // ステージを作成
     private void CreateStage()

@@ -310,7 +310,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 8
-  sceneName: Sokoban
+  sceneName: hoge
 --- !u!1 &1118519978
 GameObject:
   m_ObjectHideFlags: 0

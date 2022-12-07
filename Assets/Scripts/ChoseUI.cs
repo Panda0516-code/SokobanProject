@@ -5,35 +5,31 @@ using UnityEngine.UI;
 
 public class ChoseUI : MonoBehaviour
 {
-  private enum TextObj
-    {
-        Start,//スタートのテキスト
-        Exit,//終わりのテキスト
-    }
+
     [SerializeField]
-    GameObject StartUI = null;
+    GameObject StartUI = null;//スタートテキスト
     [SerializeField]
-    GameObject ExitUI = null;
+    GameObject ExitUI = null;//exitのテキスト
     private void Awake()
     {
-        ExitUI.GetComponent<TextUI>().enabled = false;
+        ExitUI.GetComponent<TextUI>().enabled = false;//exitのテキストを非表示
     }
 
     private void Update()
     {
-        if(Input.GetKey(KeyCode.UpArrow))
+        if (Input.GetKey(KeyCode.UpArrow))//上↑を押したとき
         {
-            ExitUI.GetComponent<TextUI>().enabled = false; 
-            StartUI.GetComponent<TextUI>().enabled = true;
-            ExitUI.GetComponent<Text>().color = Color.white;
-            StartUI.GetComponent<Text>().color = Color.green;
+            ExitUI.GetComponent<TextUI>().enabled = false; //exitをfalseに
+            StartUI.GetComponent<TextUI>().enabled = true;//startをtrueに
+            ExitUI.GetComponent<Text>().color = Color.white;//exitを白に
+            StartUI.GetComponent<Text>().color = Color.green;//startを緑に
         }
-        if (Input.GetKey(KeyCode.DownArrow))
+        if (Input.GetKey(KeyCode.DownArrow))//↓を押したとき
         {
-            StartUI.GetComponent<TextUI>().enabled = false;
-            ExitUI.GetComponent<TextUI>().enabled = true;
-            StartUI.GetComponent<Text>().color = Color.white;
-            ExitUI.GetComponent<Text>().color = Color.green;
+            StartUI.GetComponent<TextUI>().enabled = false;//startをfalseに
+            ExitUI.GetComponent<TextUI>().enabled = true;//exitをtrueに
+            StartUI.GetComponent<Text>().color = Color.white;//startを白に
+            ExitUI.GetComponent<Text>().color = Color.green;//exitを緑に
         }
     }
 }
